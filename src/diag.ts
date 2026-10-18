@@ -5,11 +5,17 @@ export class Diagnostics {
   constructor(public file?: string) {}
 
   error(pos: Pos, message: string, fix?: string): void {
-    this.list.push({ level: 'error', message, line: pos.line, col: pos.col, file: this.file, ...(fix ? { fix } : {}) });
+    this.add({ level: 'error', message, line: pos.line, col: pos.col, file: this.file, ...(fix ? { fix } : {}) });
   }
 
   warn(pos: Pos, message: string, fix?: string): void {
-    this.list.push({ level: 'warning', message, line: pos.line, col: pos.col, file: this.file, ...(fix ? { fix } : {}) });
+    this.add({ level: 'warning', message, line: pos.line, col: pos.col, file: this.file, ...(fix ? { fix } : {}) });
+  }
+
+  /** A line repeated by `each` or a component reports each problem once. */
+  private add(d: Diagnostic): void {
+    if (this.list.some((x) => x.level === d.level && x.message === d.message && x.line === d.line && x.col === d.col && x.file === d.file)) return;
+    this.list.push(d);
   }
 
   get hasErrors(): boolean {

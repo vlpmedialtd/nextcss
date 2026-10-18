@@ -16,7 +16,7 @@ HTML and CSS were designed for people who look at the screen while they type. An
 | **No eyes.** Pixel values, z-index and breakpoints are guesses. | Semantic scales (`s m l xl`) and color *pairs* (`tone:primary`) with guaranteed contrast. Layouts adapt on their own (intrinsic layout). |
 | **Mechanism instead of intent.** You have to write `display:flex; justify-content:space-between`. | Intent words: `bar`, `split`, `grid min:16rem`, `cover`. |
 | **Easy to forget.** `alt` text, labels, heading order, focus styles. | These are part of the type system. Heading levels follow from nesting, and an image without `alt` is a compile error. |
-| **Boilerplate.** Closing tags, class names, JavaScript for an accordion or a menu. | One line per element. `fold`, `menu` and `dialog` compile to platform features (`details`, `popover`, `dialog` with invoker commands). |
+| **Boilerplate.** Closing tags, class names, JavaScript for an accordion, tabs or a menu. | One line per element. `fold`, `tabs`, `menu` and `dialog` compile to platform features (`details`, exclusive `details name`, `popover`, `dialog` with invoker commands). `each` repeats lines for JSON data at compile time. |
 | **Many ways to do one thing.** | One canonical form (`nextcss fmt`) and a closed vocabulary. |
 | **Invalid output.** | Every error names the fix. A JSON Schema constrains generation, so invalid documents cannot be produced at all. |
 | **No feedback loop.** | `nextcss inspect` renders the page and reports, as text, what came out: outline, columns per width, contrast, overflow and tap targets. |
@@ -39,7 +39,7 @@ comment= "//" rest-of-line             whole lines only
 - **Canonical order.** `fmt` writes the parts in this order: `role#id "text" flags key:value name=value wide{…} narrow{…}`.
 - **`key:value`** is a typed key from the schema. It is validated, and an unknown key or value is an error with a suggestion.
 - **`name=value`** is a raw HTML attribute, passed through unchanged. It is the escape hatch.
-- **Values** are bare or `"quoted"`. Quotes are needed when the value contains spaces, `"`, `{` or `}`. Quoting never changes the meaning.
+- **Values** are bare or `"quoted"`. Quotes are needed when the value contains spaces, `"`, `{` or `}`. Quoting never changes the meaning. An inline JSON array is bare as well: `items:["a b","c"]`.
 - **Strings** are single-line. Escapes are `\"` `\\` `\{` `\}` `\*` `` \` `` `\[`. A text string may contain `{role …}` inline elements with nested strings.
 - **Comments** start with `//` at the beginning of a line.
 
@@ -153,7 +153,7 @@ Only what is used is emitted: role classes, modifier classes and the design toke
 
 ---
 
-## 6. Components
+## 6. Components and data loops
 
 ```
 define Feature(title, text="")
@@ -171,6 +171,25 @@ Feature "Schnell" tone:subtle
 - `slot` receives the instance's child lines.
 - Optional parameters that stay empty remove the lines and keys that use them.
 - `use "./parts.ncss"` loads components and the theme from another file.
+
+### Data loops
+
+```
+each items:./team.json
+  Member "{$name}" role:"{$role}"
+    row
+      each items:"{$skills}"
+        badge "{$item}"
+```
+
+- `each` repeats its child lines once per item of a JSON array and then disappears. It is expanded at compile time, after `use` and together with components, so the output stays static HTML.
+- `items` is a `.json` file or an inline array: `items:["Schnell","Sicher"]`. Files are read through the same loader as `use` and resolve relative to the file the `each` line is written in (also inside a component from a `use` file).
+- `{$field}` is a field of the item, `{$a.b}` a nested field, `{$item}` the whole item and `{$index}` its position from 1. Arrays and objects become JSON, so an inner loop can take them: `each items:"{$skills}"`.
+- Inner loops see the fields of outer loops; on equal names the inner field wins.
+- A field that only some items have is empty in the others, and lines and keys that become empty disappear, as with optional component parameters. An inner loop whose `items` is empty repeats nothing. A field that no item has is an error that lists the fields.
+- Values from data are text: inline Markdown works, quotes and `{…}` are literal.
+- The lines a loop produces are validated, not the loop, so `each` also fills roles that only take certain children: `item` in a `list`, `cells` in a `table`, `option` in a `field`, `tab` in `tabs`.
+- Ids are not interpolated, so an element with an `#id` inside a loop with several items is a duplicate-id error.
 
 ---
 
@@ -197,9 +216,24 @@ A file without a `page` line compiles to a fragment.
 |---|---|
 | CSS | only used rules and tokens; one `<style>` if HTML + CSS stay under 14 KB gzipped, otherwise a hashed external file; one shared hashed file for multi-page builds |
 | Images | local files get `width`/`height`; `loading=lazy decoding=async` except in the header, the hero and the first block; `lcp` sets `fetchpriority=high` |
-| Interactivity | `details`/`summary`, the Popover API with anchor positioning, `<dialog>` with `commandfor`/`command` — no JavaScript |
+| Interactivity | `details`/`summary` (exclusive `details name` for `accordion` and `tabs`), the Popover API with anchor positioning, `<dialog>` with `commandfor`/`command` — no JavaScript |
 | Accessibility | labels wrap inputs, hints use `aria-describedby`, `alert tone:danger` uses `role=alert`, focus rings come from the accent color, reduced motion is respected |
 | HTML | minimal quoting, no optional whitespace |
+
+### Tabs
+
+```
+tabs
+  tab "Monatlich"
+    text "29 €"
+  tab "Jährlich" open
+    text "290 €"
+```
+
+- Each `tab` becomes a `<details>` with its label as `<summary>`. All of them share one `name`, so the browser keeps exactly one open. The first tab is open unless another one has `open`.
+- Where `::details-content` is supported, the CSS sets the `details` to `display: contents`, lines the summaries up as a tab row and shows the open panel below it. Elsewhere the same markup is an accordion, so nothing breaks.
+- Keyboard and screen reader support come from the native disclosure: every label is a button that is reached with Tab and opened with Enter or Space. The open tab cannot be closed with the mouse.
+- A tab label is not a heading, so titles inside a tab keep the level of the surrounding section.
 
 ---
 
@@ -216,7 +250,7 @@ The same tree, one object per line, for tool calls and structured output:
 ] }
 ```
 
-- **Shape.** Flags are `true`. Keys are strings. Raw attributes go in `attrs`. Verbatim content goes in `content`. `el` puts its tag in `tag`.
+- **Shape.** Flags are `true`. Keys are strings. Raw attributes go in `attrs`. Verbatim content goes in `content`. `el` puts its tag in `tag`. Inline data of `each` is a real array: `{ "role": "each", "items": ["a", "b"], "children": [ … ] }`.
 - **Schema.** `nextcss schema` prints a JSON Schema (draft 2020-12) with one definition per role and enums for every typed key. Used for constrained decoding, it lets a model emit only valid documents.
 - **Conversion.** `nextcss convert` switches between the line format and JSON.
 

@@ -1,0 +1,6 @@
+[
+  { "name": "Lena Brandt", "role": "Gründerin, Strategie", "bio": "Plant Websites vom Ziel her.", "skills": ["Strategie", "UX"] },
+  { "name": "Jonas Weber", "role": "Design", "bio": "Typografie, Farbe und Systeme.", "skills": ["Design", "Marken"] },
+  { "name": "Mira Okafor", "role": "Entwicklung", "skills": ["Performance", "Barrierefreiheit"] },
+  { "name": "Tom Lindqvist", "role": "Entwicklung", "bio": "Shops, die unter einer Sekunde laden.", "skills": ["Shopware", "SEO"] }
+]

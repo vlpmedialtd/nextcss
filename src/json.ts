@@ -34,12 +34,22 @@ function nodeToJson(n: Node): JsonNode {
   if (n.role === 'columns' || n.role === 'cells') o.texts = n.texts.map((t) => unq(t.raw));
   else if (n.texts[0]) o.text = unq(n.texts[0].raw);
   for (const f of flags) o[f.name] = true;
-  for (const p of n.props) o[p.key] = p.value.raw;
+  for (const p of n.props) o[p.key] = n.role === 'each' && p.key === 'items' ? inlineData(p.value.raw) : p.value.raw;
   if (n.attrs.length) o.attrs = Object.fromEntries(n.attrs.map((a) => [a.name, a.value.raw]));
   for (const b of n.blocks) o[b.cond] = Object.fromEntries(b.items.map((it) => (it.kind === 'prop' ? [it.key, it.value.raw] : it.kind === 'flag' ? [it.name, true] : [it.cond, '…'])));
   if (n.verbatim) o.content = n.verbatim.join('\n');
   if (n.children.length) o.children = n.children.map(nodeToJson);
   return o as JsonNode;
+}
+
+/** each items:[…] is a real array in the JSON form. */
+function inlineData(raw: string): unknown {
+  if (!raw.trim().startsWith('[')) return raw;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return raw;
+  }
 }
 
 /** Raw string source → plain text with \" resolved (inline Markdown stays). */
@@ -101,6 +111,7 @@ export function fromJson(json: JsonDocument): Document {
         }
         default:
           if (v === true) n.flags.push({ kind: 'flag', name: k, pos: p });
+          else if (typeof v === 'object' && v !== null) n.props.push({ kind: 'prop', key: k, value: { raw: JSON.stringify(v), quoted: false }, pos: p });
           else if (v !== false && v !== null && v !== undefined) n.props.push({ kind: 'prop', key: k, value: { raw: String(v), quoted: false }, pos: p });
       }
     }
@@ -133,6 +144,8 @@ function keySchema(t: KeyType): Record<string, unknown> {
       return { type: 'string', pattern: '^#?[A-Za-z][\\w-]*$' };
     case 'color':
       return { type: 'string', pattern: '^(#[0-9a-fA-F]{3}|#[0-9a-fA-F]{6}|oklch\\(.*\\)|rgb\\(.*\\))$' };
+    case 'data':
+      return { anyOf: [{ type: 'array' }, { type: 'string', description: 'path to a .json file with an array' }] };
     default:
       return { type: 'string' };
   }
@@ -151,7 +164,7 @@ export function jsonSchema(): Record<string, unknown> {
     if (role === 'define') props.signature = { type: 'string', description: 'Name(param, other="default")' };
     for (const [k, kd] of Object.entries(def.keys)) {
       props[k] = { ...keySchema(kd.type), description: kd.doc };
-      if (!['url', 'string', 'idref'].includes(kd.type.t)) styleProps[k] = props[k];
+      if (!['url', 'string', 'idref', 'data'].includes(kd.type.t)) styleProps[k] = props[k];
     }
     for (const [f, doc] of Object.entries(def.flags)) props[f] = { const: true, description: doc };
     if (def.verbatim) props.content = { type: 'string', description: def.verbatim === 'markdown' ? 'Markdown' : 'literal content' };

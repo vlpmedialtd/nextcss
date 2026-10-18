@@ -35,6 +35,8 @@ function keyText(k: string, kd: KeyDef): string {
     case 'tone':
     case 'width':
       return `${k}${suffix}`;
+    case 'data':
+      return `${k}${suffix}=file.json|[…]`;
     default:
       return `${k}${suffix}=${t.t}`;
   }

@@ -49,6 +49,7 @@ Format: `role: what it is · keys · flags`. `key!` is required, `key=url`/`key=
 - use: Load components and the theme from another file
 - define: Define a component
 - slot: Inside define: where the children of the instance go
+- each: Repeats its child lines for every item of a JSON array: {$field} is a field of the item (or {$a.b}), {$item} the whole item, {$index} its number from 1 · items!=file.json|[…]
 
 ### Escape hatches
 
@@ -111,6 +112,8 @@ Format: `role: what it is · keys · flags`. `key!` is required, `key=url`/`key=
 
 - fold: Expandable section (FAQ) · flags open
 - accordion: Group of folds where only one is open at a time
+- tabs: Tabs: one tab line per panel, only one panel is visible
+- tab: One panel of tabs; its string is the tab label · flags open
 - menu: Pop-up panel opened by a button with opens:<id> · gap
 - dialog: Modal dialog opened by a button with opens:<id> · gap width
 

@@ -1,0 +1,43 @@
+page "Nordlicht Studio – Team und Preise" lang:de description:"Das Team und die Preise von Nordlicht Studio."
+theme brand:#0f766e radius:l
+
+define Member(name, role, bio="")
+  card
+    title "{$name}"
+    text "{$role}" muted
+    text "{$bio}"
+    slot
+
+hero tone:inverse align:center height:half
+  title "Das Team hinter Nordlicht"
+  text "Vier Menschen, ein Ziel: schnelle Websites."
+
+section
+  title "Team"
+  grid min:15rem
+    each items:./team.json
+      Member "{$name}" role:"{$role}" bio:"{$bio}"
+        row gap:xs
+          each items:"{$skills}"
+            badge "{$item}"
+
+section tone:subtle
+  title "Preise"
+  tabs
+    tab "Monatlich"
+      grid min:14rem
+        each items:./plans.json
+          card
+            badge "{$badge}"
+            title "{$name}"
+            text "**{$monthly} €** im Monat, {$pages}"
+    tab "Jährlich"
+      grid min:14rem
+        each items:./plans.json
+          card
+            badge "{$badge}"
+            title "{$name}"
+            text "**{$yearly} €** im Jahr, {$pages}"
+  list marker:check
+    each items:["Hosting inklusive","Monatlich kündbar","Kein JavaScript nötig"]
+      item "{$item}"

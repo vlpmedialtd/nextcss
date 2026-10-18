@@ -67,6 +67,7 @@ export interface RoleNode {
   children: Node[];
   verbatim?: string[]; // content lines of verbatim roles
   rest?: string; // raw rest of the line (define signature)
+  from?: string; // file the line was written in, when it came from a component of a `use` file
   pos: Pos;
 }
 

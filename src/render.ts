@@ -29,12 +29,14 @@ interface Ctx {
   inNav: boolean;
   eager: boolean;
   accordion?: string;
+  tabs?: { name: string; open: Node | undefined };
 }
 
 const ROOT_CTX: Ctx = { depth: 0, inHero: false, inCard: false, inNav: false, eager: false };
 
 export class Renderer {
   private accordionCount = 0;
+  private tabsCount = 0;
   headings: { level: number; text: string; pos: Pos }[] = [];
   constructor(private o: RenderOptions) {}
 
@@ -256,6 +258,27 @@ export class Renderer {
       case 'accordion': {
         const name = `acc${++this.accordionCount}`;
         return this.open('div', n, this.classes(n)) + this.children(n, { ...ctx, accordion: name }) + '</div>';
+      }
+      case 'tabs': {
+        // exclusive <details> (same name): one panel open at a time, laid out as tabs by CSS
+        const tabs = n.children.filter((c): c is RoleNode => c.kind === 'node' && c.role === 'tab');
+        const open = tabs.find((t) => this.flag(t, 'open')) ?? tabs[0];
+        return this.open('div', n, this.classes(n)) + this.children(n, { ...ctx, tabs: { name: `tabs${++this.tabsCount}`, open } }) + '</div>';
+      }
+      case 'tab': {
+        const summary = `<summary>${this.inline(n.texts[0]?.raw ?? '', n.pos, ctx)}</summary>`;
+        // like fold, a tab is not sectioning: its label is not a heading
+        const inner: Ctx = { ...ctx, tabs: undefined, accordion: undefined };
+        const body = o.plain ? this.children(n, inner) : `<div>${this.children(n, inner)}</div>`;
+        return (
+          this.open('details', n, this.classes(n), [
+            ['name', ctx.tabs?.name],
+            ['open', (ctx.tabs ? ctx.tabs.open === n : this.flag(n, 'open')) || undefined],
+          ]) +
+          summary +
+          body +
+          '</details>'
+        );
       }
       case 'menu': {
         const cls = this.classes(n);

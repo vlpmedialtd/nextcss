@@ -1,0 +1,5 @@
+[
+  { "name": "Start", "monthly": "49", "yearly": "490", "pages": "bis 5 Seiten" },
+  { "name": "Wachstum", "monthly": "99", "yearly": "990", "pages": "bis 20 Seiten", "badge": "Beliebt" },
+  { "name": "Shop", "monthly": "199", "yearly": "1.990", "pages": "Shop mit Katalog" }
+]

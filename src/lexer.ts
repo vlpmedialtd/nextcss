@@ -157,7 +157,31 @@ export class LineLexer {
 
   private readStyleValue(): Value {
     if (this.s[this.i] === '"') return this.readPlainString();
+    if (this.s[this.i] === '[') return { raw: this.readJsonArray(), quoted: false };
     return { raw: this.readBare(), quoted: false };
+  }
+
+  /** An inline JSON array (each items:[…]): brackets balanced, strings skipped. */
+  private readJsonArray(): string {
+    const s = this.s;
+    const start = this.i;
+    let depth = 0;
+    for (let j = start; j < s.length; j++) {
+      const c = s[j];
+      if (c === '"') {
+        for (j++; j < s.length && s[j] !== '"'; j++) if (s[j] === '\\') j++;
+      } else if (c === '[' || c === '{') depth++;
+      else if (c === ']' || c === '}') {
+        depth--;
+        if (depth === 0) {
+          this.i = j + 1;
+          return s.slice(start, this.i);
+        }
+      }
+    }
+    this.diag.error(this.pos(start), 'unterminated "[" – close the array with "]"');
+    this.i = s.length;
+    return s.slice(start);
   }
 
   private readBare(): string {

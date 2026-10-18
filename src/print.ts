@@ -89,7 +89,18 @@ function blockText(n: RoleNode, b: Block): string {
 /** Bare when unambiguous, otherwise quoted. */
 export function value(raw: string, _wasQuoted = false): string {
   if (raw !== '' && !/[\s"{}]/.test(raw) && !unbalancedParens(raw)) return raw;
+  if (raw.startsWith('[') && isJson(raw)) return raw; // inline data: each items:["a","b"]
   return `"${raw.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+}
+
+function isJson(s: string): boolean {
+  if (s.trim() !== s) return false;
+  try {
+    JSON.parse(s);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function unbalancedParens(s: string): boolean {

@@ -99,7 +99,7 @@ node dist/cli.js build examples/landing/index.ncss
 | `nextcss import page.html` | HTML/CSS → nextcss, same rendering |
 | `nextcss convert <file>` | line format ⇄ JSON |
 | `nextcss schema` | JSON Schema of the JSON form, for structured output / constrained decoding |
-| `nextcss docs` | the whole language in about 1,850 tokens (same as [`llms.txt`](llms.txt)) |
+| `nextcss docs` | the whole language in about 1,950 tokens (same as [`llms.txt`](llms.txt)) |
 
 ### Errors that say how to fix them
 
@@ -139,10 +139,11 @@ No problems found.
 - **Text.** Strings support `**bold**`, `*italic*`, `` `code` ``, `[links](/url)` and inline roles `{badge "neu"}`. Long-form content goes into `prose` as Markdown.
 - **Layout.** `stack row bar split grid sidebar center cover layer`, plus the regions `header nav main section hero aside footer`.
 - **Content.** `title text prose list item quote code image video icon table card badge alert divider`.
-- **Actions and interaction.** `link`, `button` (`to`, `opens`, `closes`, `submit`), `fold`, `accordion`, `menu`, `dialog`.
+- **Actions and interaction.** `link`, `button` (`to`, `opens`, `closes`, `submit`), `fold`, `accordion`, `tabs`, `menu`, `dialog`.
 - **Forms.** `form field check option`. Labels, names and hints are wired up for you.
 - **Design.** `theme brand:#… font:… radius:… density:… dark:auto`. Every color, space and text size is derived from it.
 - **Reuse.** `define Card(title)` plus `slot`, and `use "./parts.ncss"`.
+- **Data.** `each items:./team.json` repeats its lines for every item, with `{$name}` for the fields. Inline arrays work too: `each items:["Schnell","Sicher"]`.
 - **Escape hatches.** `css:"…"` (scoped to one element, supports nesting), `name=value` raw attributes, `el <any-tag>`, raw `html` and `css` blocks.
 
 The full spec is in [`spec/SPEC.md`](spec/SPEC.md) and the complete vocabulary in [`llms.txt`](llms.txt). Both come from one schema, [`src/schema.ts`](src/schema.ts).
@@ -177,10 +178,9 @@ From there, a person or an AI can lift the page to roles and tones piece by piec
 
 ## Status
 
-v0.1 is a working compiler, importer, formatter and inspector, with unit and visual tests. Planned next:
+v0.1 is a working compiler, importer, formatter and inspector, with unit and visual tests. Data loops (`each`) and tabs are in; [`examples/team`](examples/team/index.ncss) uses both. Planned next:
 
-- Data loops (`each`) for lists from JSON.
-- Tabs and a carousel.
+- A carousel.
 - An icon set.
 - A precise importer mode that asks the browser which whitespace renders.
 - A Vite plugin and editor syntax highlighting.

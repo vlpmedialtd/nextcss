@@ -46,7 +46,7 @@ export function compileDocument(doc: Document, opts: CompileOptions = {}, diag =
   const col = collect(doc.nodes, diag, opts.load, opts.file);
   const page = col.page;
   const plain = !!page?.flags.some((f) => f.name === 'plain');
-  const content = expand(col.content, col.components, diag);
+  const content = expand(col.content, col.components, diag, { load: opts.load, file: opts.file });
 
   const topLevel: Node[] = [...(page ? [page] : []), ...col.themes, ...content];
   const { ids } = validate(topLevel, diag, plain);

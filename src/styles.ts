@@ -82,6 +82,26 @@ export const ROLE_CSS: Record<string, string> = {
     '&>summary::after{content:"+";font-size:1.5em;line-height:1;color:var(--n-accent);transition:rotate .2s}&[open]>summary::after{rotate:45deg}' +
     '&>div{display:flex;flex-direction:column;gap:var(--n-s-s);padding-block-end:var(--n-s-m)}',
   accordion: '&{display:flex;flex-direction:column}',
+  // tabs are exclusive <details>: with ::details-content the summaries line up as a tab row and the open
+  // panel goes below them; without it they stay an accordion
+  tabs:
+    '&{display:flex;flex-direction:column}' +
+    '@supports selector(::details-content){&{flex-flow:row wrap;align-items:flex-end;column-gap:var(--n-s-2xs)}}',
+  tab:
+    '&{border-block-end:1px solid var(--n-line)}' +
+    '&>summary{display:flex;justify-content:space-between;align-items:center;gap:var(--n-s-s);padding-block:var(--n-s-s);cursor:pointer;font-weight:600;list-style:none}' +
+    '&>summary::-webkit-details-marker{display:none}' +
+    '&>summary::after{content:"+";font-size:1.5em;line-height:1;color:var(--n-accent);transition:rotate .2s}&[open]>summary::after{rotate:45deg}' +
+    '&>div{display:flex;flex-direction:column;gap:var(--n-s-s);padding-block:0 var(--n-s-m)}' +
+    '@supports selector(::details-content){&{display:contents}' +
+    '&>summary{padding:var(--n-s-xs) var(--n-s-s);border-block-end:2px solid transparent;color:var(--n-muted);transition:color .15s,border-color .15s}' +
+    '&>summary::after{content:none}' +
+    '&>summary:hover{color:var(--n-fg)}' +
+    // the open tab cannot be closed by clicking it again
+    '&[open]>summary{color:var(--n-accent);border-color:currentColor;cursor:default;pointer-events:none}' +
+    // closed panels stay hidden by the browser (content-visibility) and take no space
+    '&::details-content{order:1;flex-basis:100%}' +
+    '&[open]::details-content{border-block-start:1px solid var(--n-line);padding-block-start:var(--n-s-m)}&>div{padding-block-end:0}}',
   menu:
     '&{padding:var(--n-s-s);border:1px solid var(--n-line);border-radius:var(--n-r-m);background:var(--n-surface);color:var(--n-fg);' +
     'box-shadow:var(--n-shadow-l);min-inline-size:12rem}&:popover-open{display:flex;flex-direction:column;gap:var(--n-s-xs)}',

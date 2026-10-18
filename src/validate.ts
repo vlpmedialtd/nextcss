@@ -43,6 +43,7 @@ export function checkValue(type: KeyType, v: string): string | null {
     case 'url':
     case 'string':
     case 'css':
+    case 'data': // checked when the items are loaded (expand.ts)
       return null;
   }
 }
@@ -83,6 +84,7 @@ export function validate(nodes: Node[], diag: Diagnostics, plain: boolean): Vali
         if (parent?.role !== 'table') diag.error(n.pos, `"${n.role}" belongs inside table`);
       }
       if (n.role === 'option' && !(parent?.role === 'field')) diag.error(n.pos, 'option belongs inside field type:select');
+      if (n.role === 'tab' && parent?.role !== 'tabs') diag.error(n.pos, 'tab belongs inside tabs');
 
       // id
       if (n.id) {
@@ -148,6 +150,13 @@ export function validate(nodes: Node[], diag: Diagnostics, plain: boolean): Vali
         if (hasOptions && type !== 'select') diag.error(n.pos, 'a field with options needs type:select');
         if (type === 'select' && !hasOptions) diag.error(n.pos, 'type:select needs option lines');
       }
+      if (n.role === 'tabs') {
+        const tabs = n.children.filter((c): c is RoleNode => c.kind === 'node' && c.role === 'tab');
+        if (!tabs.length) diag.error(n.pos, 'tabs needs tab lines: tab "Label"');
+        for (const extra of tabs.filter((t) => t.flags.some((f) => f.name === 'open')).slice(1)) {
+          diag.warn(extra.pos, 'only one tab can be open initially; the first one with open is shown');
+        }
+      }
 
       walk(n.children, n);
     }
@@ -183,7 +192,7 @@ function checkProp(n: RoleNode, p: Prop, diag: Diagnostics, inBlock: boolean): v
     );
     return;
   }
-  if (inBlock && ['url', 'string', 'idref'].includes(kd.type.t)) {
+  if (inBlock && ['url', 'string', 'idref', 'data'].includes(kd.type.t)) {
     diag.error(p.pos, `"${p.key}" cannot change inside a block`);
     return;
   }

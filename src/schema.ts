@@ -14,7 +14,8 @@ export type KeyType =
   | { t: 'ratio' }
   | { t: 'idref' }
   | { t: 'css' }
-  | { t: 'color' };
+  | { t: 'color' }
+  | { t: 'data' }; // path to a .json file, or an inline JSON array
 
 export interface KeyDef {
   type: KeyType;
@@ -147,6 +148,18 @@ export const ROLES: Record<string, RoleDef> = {
     text: 'none',
     children: 'none',
     example: 'slot',
+  },
+  each: {
+    group: 'document',
+    doc:
+      'Repeats its child lines for every item of a JSON array: {$field} is a field of the item (or {$a.b}), {$item} the whole item, {$index} its number from 1. ' +
+      'items is a .json file or an inline array. Fields missing in some items are empty, and lines that become empty disappear. Nested loops can use the fields of outer loops.',
+    tag: '',
+    keys: { items: k({ t: 'data' }, 'a .json file with an array, or an inline array like ["a","b"]', true) },
+    flags: {},
+    text: 'none',
+    children: 'any',
+    example: 'each items:./team.json\n  card\n    title "{$name}"\n    text "{$role}"',
   },
   head: {
     group: 'escape',
@@ -621,6 +634,27 @@ export const ROLES: Record<string, RoleDef> = {
     text: 'none',
     children: ['fold', 'comment'],
     example: 'accordion\n  fold "Frage 1"\n    text "Antwort"',
+  },
+  tabs: {
+    group: 'interactive',
+    doc:
+      'Tabs: one tab line per panel, only one panel is visible. No JavaScript: exclusive <details> laid out as tabs; browsers without ::details-content show an accordion.',
+    tag: 'div',
+    keys: { ...GLOBAL },
+    flags: {},
+    text: 'none',
+    children: ['tab', 'comment'],
+    example: 'tabs\n  tab "Monatlich"\n    text "29 € im Monat"\n  tab "Jährlich"\n    text "290 € im Jahr"',
+  },
+  tab: {
+    group: 'interactive',
+    doc: 'One panel of tabs; its string is the tab label. The first tab is shown unless another one has the flag open.',
+    tag: 'details',
+    keys: { ...GLOBAL },
+    flags: { open: 'shown initially (default: the first tab)' },
+    text: 'required',
+    children: 'any',
+    example: 'tab "Jährlich" open\n  text "290 € im Jahr"',
   },
   menu: {
     group: 'interactive',
