@@ -1,0 +1,122 @@
+# nextcss v0.1 – complete reference
+
+nextcss replaces HTML+CSS. It compiles to static HTML and minimal CSS without JavaScript.
+
+## Syntax
+
+- One line is one element. Indent child lines by two spaces. There are no closing tags, no classes and no selectors.
+- Line shape: `role[#id] flags "text" key:value wide{key:value} narrow{key:value}`
+- A line that is only `"text"` is a text line. `| text` is a long text line. `// comment` is a comment.
+- Text supports **bold**, *italic*, `code`, [label](url) and inline roles: {link "here" to:/x}.
+- Quote values that contain spaces: alt:"Unser Team".
+- `name=value` sets a raw HTML attribute (escape hatch).
+- Sibling lines are joined without whitespace, so put spaces inside the strings.
+
+## Values
+
+- space: none 2xs xs s m l xl 2xl 3xl
+- text size: xs s m l xl 2xl 3xl 4xl (fluid: grows with the screen)
+- tone: default subtle primary accent inverse danger success warning. It sets background and text color as a pair, contrast ≥ 4.5:1 guaranteed. Nested buttons and links adapt.
+- width: narrow text wide full, or a length like 50rem
+- length: a number with unit (16rem, 240px, 50%)
+- surface: flat raised outline sunken
+- radius: none s m l full
+- align: start center end
+- valign: start center end stretch
+
+## Every role accepts
+
+- `css:"…"` – raw CSS for this element only; nesting allowed: `css:"color:red;&:hover{color:blue}"`
+- `hide:narrow|wide|all`
+- `data-*`, `aria-*`, `class`, `title`, `lang`, `dir`, `role`, `tabindex` are passed through as attributes.
+- `wide{…}` applies keys from 48rem width up, `narrow{…}` below it. This is rarely needed.
+
+## Rules the compiler enforces
+
+- Heading levels come from nesting: hero or top level = h1, section = h2, card in a section = h3.
+- `image` needs alt:"…" or the flag decorative. Width, height and lazy loading are added automatically.
+- `menu` and `dialog` need an #id. Open them with button opens:id, close them with button closes:id.
+- Unknown roles, keys or values are errors with a suggested fix. `nextcss check` explains each one.
+
+## Roles
+
+Format: `role: what it is · keys · flags`. `key!` is required, `key=url`/`key=string` take free values, other keys take the values listed or a scale above.
+
+### Document
+
+- page: First line of a page · lang=string description=string icon=url image=url · flags plain nodoctype
+- theme: Design system · brand=color accent=color font=string heading=string mono=string fonts=url base=length radius(none|s|m|l|xl) density(compact|normal|airy) width=length dark(auto|off)
+- use: Load components and the theme from another file
+- define: Define a component
+- slot: Inside define: where the children of the instance go
+
+### Escape hatches
+
+- head: Raw HTML added to <head> (scripts, meta tags)
+- body: Explicit <body> (only needed to put attributes on it)
+- el: Any HTML element: the first bare word is the tag, every key becomes an attribute
+- html: Raw HTML; the indented lines below are inserted as they are
+- css: Raw stylesheet in the lowest cascade layer
+- script: JavaScript; inline code from the indented lines, or src · src=url type=string · flags defer async module
+
+### Page regions
+
+- header: Site header: a bar with logo, navigation and actions; wraps on small screens · tone pad surface radius width gap · flags sticky
+- nav: Navigation: links in a row that wraps · gap align valign label=string · flags vertical
+- main: Main content of the page
+- footer: Site footer: smaller text, separated from the content · tone pad surface radius width gap align valign
+- aside: Complementary content · tone pad surface radius gap align valign
+- section: A full-width band of the page · tone pad surface radius width gap align valign label=string
+- hero: Large opening band · tone pad surface radius width gap align valign image=url height(auto|half|tall|screen)
+
+### Layout (all responsive without breakpoints)
+
+- box: Neutral container without layout · tone pad surface radius width · flags grow
+- stack: Children on top of each other with even spacing · gap align valign tone pad surface radius width · flags grow
+- row: Children side by side, vertically centered; wraps when there is not enough room · gap align valign tone pad surface radius · flags grow nowrap
+- bar: Row with the first and last child pushed to the edges · gap valign tone pad surface radius · flags grow
+- split: Two or more parts side by side; they stack automatically when the container is narrower than `at` · gap valign at=length ratio=ratio tone pad surface radius · flags reverse
+- grid: Equal tiles · gap min=length cols(1-12) valign tone pad surface radius
+- center: Centers its content at a maximum width · width gap align tone pad surface radius
+- cover: At least `height` tall, content vertically centered · height(half|tall|screen) gap align valign tone pad surface radius
+- layer: Children placed on top of each other (text over an image) · align valign tone pad surface radius
+- sidebar: A side column of fixed width next to a fluid main column; stacks when the main column would get too narrow · side(left|right) width=length gap tone pad surface radius
+
+### Content
+
+- title: Heading · size weight(normal|medium|bold) align level(1-6) · flags muted
+- text: Paragraph · size weight(normal|medium|bold) align · flags muted lead
+- prose: Long-form Markdown (headings, lists, quotes, code) · size width
+- list: Bulleted list of item lines · gap marker(disc|none|check|number) · flags ordered
+- item: List item; text or children
+- quote: Quotation, optionally with author · by=string size
+- code: Code block; the indented lines below are taken literally · lang=string
+- image: Image · src!=url alt=string caption=string ratio=ratio fit(cover|contain) width=length radius · flags decorative lcp
+- video: Video with controls · src!=url poster=url ratio=ratio label=string · flags autoplay
+- icon: Inline SVG icon from a local file; takes the current text color · src!=url label=string size
+- divider: Horizontal rule
+- table: Data table: one `columns` line with headers, then `cells` lines · caption=string · flags striped
+- columns: Header row of a table: one string per column
+- cells: Data row of a table: one string per cell
+- card: Self-contained block (article) · tone pad surface radius gap align valign to=url · flags grow
+- badge: Small label · tone
+- alert: Highlighted message · tone
+
+### Actions
+
+- link: Text link · to!=url tone size weight(normal|medium|bold) · flags new muted plain
+- button: Button · to=url opens=idref closes=idref tone variant(solid|outline|ghost) size(s|m|l) · flags submit full new grow
+
+### Interactive (no JavaScript)
+
+- fold: Expandable section (FAQ) · flags open
+- accordion: Group of folds where only one is open at a time
+- menu: Pop-up panel opened by a button with opens:<id> · gap
+- dialog: Modal dialog opened by a button with opens:<id> · gap width
+
+### Forms
+
+- form: Form with stacked fields · to=url method(get|post) gap tone pad surface radius width
+- field: Labeled input · type(text|email|tel|url|number|password|date|time|search|textarea|select|file) name=string placeholder=string hint=string value=string autocomplete=string min=string max=string · flags required multiple disabled
+- option: Choice inside field type:select · value=string · flags selected
+- check: Checkbox, radio or switch with its label · type(checkbox|radio|switch) name=string value=string · flags required checked disabled

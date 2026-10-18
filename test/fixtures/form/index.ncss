@@ -1,0 +1,65 @@
+page plain lang:de
+
+head
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kontakt</title>
+
+css
+
+  body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f6f8;color:#1d2733}
+  .wrap{max-width:560px;margin:40px auto;background:#fff;padding:32px;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+  h1{margin-top:0;display:flex;align-items:center;gap:10px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  label{display:block;font-weight:bold;font-size:14px;margin:16px 0 6px}
+  input[type=text],input[type=email],select,textarea{width:100%;padding:10px;border:1px solid #b8c2cc;border-radius:6px;font:inherit}
+  textarea{min-height:120px}
+  .check{display:flex;gap:8px;align-items:center;font-weight:normal}
+  .btn{background:#0a66c2;color:#fff;border:0;padding:12px 22px;border-radius:6px;font-weight:bold;cursor:pointer;margin-top:20px}
+  .btn:hover{background:#084f96}
+  .btn:focus-visible{outline:3px solid #ffbf47}
+  .hint{font-size:12px;color:#5b6773}
+  @media (max-width:480px){.row{grid-template-columns:1fr}.wrap{margin:0;border-radius:0}}
+
+box class:wrap
+  title
+    html
+      <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path fill="#0a66c2" d="M2 4h20v16H2z"></path><path fill="#fff" d="M2 4l10 8 10-8"></path></svg>
+    " Kontakt aufnehmen"
+  text
+    "Wir melden uns "
+    el b "innerhalb von 24 Stunden"
+    "."
+  el form action=/send method=post data-track=contact
+    box class:row
+      box
+        el label "Vorname" for=vn
+        el#vn input type=text name=vorname required=""
+      box
+        el label "Nachname" for=nn
+        el#nn input type=text name=nachname
+    el label "E-Mail" for=em
+    " "
+    el#em input type=email name=email placeholder=name@firma.de required=""
+    " "
+    el span "Wir geben Ihre Adresse nicht weiter." class:hint
+    " "
+    el label "Thema" for=th
+    " "
+    el#th select name=thema
+      el option "Website"
+      el option "Shop" selected=""
+      el option "Sonstiges"
+    " "
+    el label "Nachricht" for=msg
+    " "
+    html
+      <textarea id="msg" name="nachricht">Hallo,
+      </textarea>
+    " "
+    el label class:check
+      el input type=checkbox name=dsgvo required=""
+      " Ich akzeptiere die [Datenschutzerklärung](/datenschutz)."
+    " "
+    el button "Absenden" class:btn css:"width:100%;font-size:16px" type=submit
+
+script
+  document.querySelector('form').addEventListener('submit', function (e) { e.preventDefault(); });

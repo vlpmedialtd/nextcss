@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notes on Fast Websites</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .post-meta { color: #666; font-size: 14px; }
+    .post-meta a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body class="post">
+  <header class="site-header">
+    <a class="logo" href="/">Fast&nbsp;Notes</a>
+    <ul class="menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/archive">Archive</a></li>
+      <li><a href="/about" class="active">About</a></li>
+    </ul>
+  </header>
+
+  <main class="content">
+    <article>
+      <h1>Why your site is slow &amp; what to do</h1>
+      <p class="post-meta">Posted on <time datetime="2026-03-01">March 1, 2026</time> by <a href="/me">Sam</a></p>
+      <p>Most pages ship <strong>far more CSS</strong> than they use. The browser has to download, parse and match <em>every</em> rule, even the unused ones. Use <code>coverage</code> in DevTools to see it.</p>
+      <figure class="wide">
+        <img src="hero.svg" alt="A chart of page weight over time" width="800" height="300">
+        <figcaption>Median page weight, 2016–2026.</figcaption>
+      </figure>
+      <h2>Three quick wins</h2>
+      <ol>
+        <li>Remove unused CSS.</li>
+        <li>Set <code>width</code> and <code>height</code> on images.</li>
+        <li>Lazy-load everything below the fold.</li>
+      </ol>
+      <blockquote>
+        <p>Performance is a feature.</p>
+      </blockquote>
+      <pre><code>img { max-width: 100%;
+      height: auto; }</code></pre>
+      <h2>Numbers</h2>
+      <table class="data">
+        <thead><tr><th>Metric</th><th>Before</th><th>After</th></tr></thead>
+        <tbody>
+          <tr><td>LCP</td><td>3.1 s</td><td>1.2 s</td></tr>
+          <tr><td>CSS</td><td>212 KB</td><td>9 KB</td></tr>
+        </tbody>
+      </table>
+      <p>Questions? <a href="mailto:sam@example.com">Write me</a> or read the <a href="/archive">archive</a>.</p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Fast Notes · <a href="/rss.xml">RSS</a></p>
+  </footer>
+</body>
+</html>

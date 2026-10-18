@@ -1,0 +1,70 @@
+page plain
+
+head
+  <meta charset="utf-8"><title>Acme Tools</title>
+
+css
+
+  body { margin: 0; font-family: Verdana, sans-serif; font-size: 14px; color: #333; }
+  #top { background: #2b3a4a; color: #fff; padding: 10px 20px; overflow: hidden; }
+  #top .brand { float: left; font-size: 20px; font-weight: bold; }
+  #top .links { float: right; }
+  #top .links a { color: #cfe3f7; margin-left: 12px; }
+  .banner { background: linear-gradient(#5d8fc4, #2b5f94); color: #fff; text-align: center; padding: 60px 20px; }
+  .banner h2 { font-size: 32px; margin: 0 0 10px; }
+  .boxes { text-align: center; padding: 30px 10px; font-size: 0; }
+  .box { display: inline-block; vertical-align: top; width: 30%; margin: 1.5%; font-size: 14px; background: #f2f2f2; padding: 16px; box-sizing: border-box; text-align: left; }
+  .box h3 { margin-top: 0; color: #2b5f94; }
+  .box:hover { background: #e8eef5; }
+  .price { font-size: 22px; color: #c0392b; }
+  .price small { font-size: 12px; color: #999; }
+  details { max-width: 600px; margin: 10px auto; border: 1px solid #ccc; padding: 8px 12px; }
+  summary { cursor: pointer; font-weight: bold; }
+  .foot { clear: both; background: #eee; text-align: center; padding: 14px; font-size: 12px; }
+  @media (max-width: 700px) { .box { display: block; width: auto; margin: 10px; } #top .links { float: none; display: block; } }
+
+box#top
+  el span "ACME" class:brand
+  el span "[Products](#) [Support](#) [Login](#)" class:links
+
+box class:banner
+  title "Tools that last" level:2
+  text
+    "Since 1952. "
+    el i "Made in Germany."
+
+box class:boxes
+  box class:box data-sku=H-1
+    title "Hammer" level:3
+    text "Forged steel, wooden handle."
+    text class:price
+      "19,90 € "
+      el small "incl. VAT"
+  " "
+  box class:box data-sku=S-2
+    title "Saw" level:3
+    text
+      "Fine teeth for "
+      el u "hard wood"
+      "."
+    text class:price
+      "29,90 € "
+      el small "incl. VAT"
+  " "
+  box class:box data-sku=P-3
+    title "Pliers" level:3
+    text "Insulated up to 1000 V."
+    text class:price
+      "14,50 € "
+      el small "incl. VAT"
+
+el details
+  el summary "Shipping"
+  text "Free shipping from 50 €. Delivery in 2–3 days."
+
+el details open=""
+  el summary "Returns"
+  text "30 days, no questions asked."
+
+box class:foot
+  "© 2026 ACME GmbH · [Imprint](#)"

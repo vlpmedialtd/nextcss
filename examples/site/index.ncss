@@ -1,0 +1,18 @@
+page "Nordlicht Studio" lang:de description:"Design und Entwicklung."
+use "./parts.ncss"
+
+SiteHeader
+
+hero tone:primary
+  title "Wir gestalten digitale Produkte"
+  text "Strategie, Design und Code aus einem Team."
+  button "Journal lesen" to:post.html tone:default
+
+section
+  title "Aus dem Journal"
+  grid min:18rem
+    Teaser "Warum nextcss?" text:"HTML und CSS für KI neu gedacht." to:post.html
+    Teaser "Kontrast ohne Raten" text:"Wie Farbpaare Barrieren verhindern." to:post.html
+    Teaser "Layout ohne Breakpoints" text:"Intrinsische Layouts in der Praxis." to:post.html
+
+SiteFooter

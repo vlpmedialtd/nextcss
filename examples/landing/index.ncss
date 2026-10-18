@@ -1,0 +1,110 @@
+page "Pixelfarben – Webdesign, das verkauft" lang:de description:"Schnelle Shops und Websites aus Hamburg."
+theme brand:#0a66c2 radius:m
+
+header sticky
+  link "**Pixel**farben" plain to:/
+  nav hide:narrow
+    link "Leistungen" to:#leistungen
+    link "Preise" to:#preise
+    link "FAQ" to:#faq
+  button "Kontakt" opens:kontakt size:s hide:narrow
+  button "Menü" opens:menu variant:outline size:s hide:wide
+
+menu#menu
+  link "Leistungen" to:#leistungen
+  link "Preise" to:#preise
+  link "FAQ" to:#faq
+  button "Kontakt" full opens:kontakt
+
+hero tone:inverse align:center
+  badge "Neu: Shopware 6.7" tone:accent
+  title "Websites, die verkaufen"
+  text "Wir bauen **schnelle** Shops und Websites – messbar besser in Ladezeit, Sichtbarkeit und Umsatz."
+  row align:center
+    button "Projekt starten" opens:kontakt
+    button "Referenzen" to:#referenzen variant:outline
+
+section#leistungen
+  title "Leistungen"
+  text "Alles aus einer Hand, von der Strategie bis zum Betrieb." muted
+  grid min:15rem
+    card
+      title "Performance"
+      text "Ladezeiten unter einer Sekunde, gemessen mit echten Nutzerdaten."
+    card
+      title "Shopware"
+      text "Shops, Plugins und Migrationen auf Shopware 6."
+    card
+      title "SEO"
+      text "Technisches SEO und Inhalte, die gefunden werden."
+
+section#preise tone:subtle
+  title "Preise"
+  grid cols:3
+    card
+      badge "Start"
+      title "Basic"
+      text "**ab 2.900 €**"
+      list marker:check
+        item "Bis 5 Seiten"
+        item "Hosting inklusive"
+      button "Anfragen" full opens:kontakt variant:outline
+    card surface:raised
+      badge "Beliebt" tone:primary
+      title "Business"
+      text "**ab 7.900 €**"
+      list marker:check
+        item "Bis 20 Seiten"
+        item "SEO-Paket"
+        item "Wartung 12 Monate"
+      button "Anfragen" full opens:kontakt
+    card
+      badge "Shop"
+      title "Commerce"
+      text "**auf Anfrage**"
+      list marker:check
+        item "Shopware 6"
+        item "Schnittstellen"
+      button "Anfragen" full opens:kontakt variant:outline
+
+section#referenzen
+  split valign:center ratio:3/2
+    stack
+      title "Über uns"
+      text "Seit 2012 bauen wir Websites für den Mittelstand. Ein kleines Team, kurze Wege, klare Preise."
+      quote "Die Seite ist doppelt so schnell und wir haben 30 % mehr Anfragen." by:"Anna Schmidt, Geschäftsführerin"
+    stack tone:primary pad:l radius:l
+      text "120+" size:4xl weight:bold
+      text "Projekte seit 2012"
+
+section#faq width:text
+  title "Häufige Fragen"
+  accordion
+    fold "Wie lange dauert ein Projekt?"
+      text "Eine Website 4–8 Wochen, ein Shop 2–4 Monate."
+    fold "Was kostet die Wartung?"
+      text "Ab 90 € im Monat, inklusive Updates und Backups."
+    fold "Arbeitet ihr auch remote?"
+      text "Ja, die meisten Projekte laufen komplett remote."
+
+dialog#kontakt
+  title "Projekt anfragen"
+  form to:/api/kontakt
+    field "Name" required autocomplete:name
+    field "E-Mail" required type:email
+    field "Budget" type:select
+      option "bis 5.000 €"
+      option "5.000–15.000 €"
+      option "über 15.000 €"
+    field "Nachricht" type:textarea
+    check "Ich bin mit der Datenschutzerklärung einverstanden" required
+    row
+      button "Senden" submit
+      button "Abbrechen" closes:kontakt variant:ghost
+
+footer
+  bar
+    text "© 2026 Pixelfarben GmbH"
+    nav label:Rechtliches
+      link "Impressum" to:/impressum
+      link "Datenschutz" to:/datenschutz

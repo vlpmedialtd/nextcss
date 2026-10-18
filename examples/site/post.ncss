@@ -1,0 +1,37 @@
+page "Warum nextcss? – Nordlicht Studio" lang:de
+use "./parts.ncss"
+
+SiteHeader
+
+main
+  hero width:text height:auto
+    title "Warum nextcss?"
+    text "18. Oktober 2026 · 4 Minuten" muted size:s
+  section width:text
+    prose
+      HTML und CSS sind für Menschen gemacht, die beim Tippen auf den Bildschirm schauen.
+      Ein Sprachmodell **sieht nichts** und schreibt in einem Durchgang.
+
+      ## Was sich ändert
+
+      - Keine Selektoren: jede Zeile beschreibt ihr Element vollständig.
+      - Keine Pixel: Abstände und Farben kommen aus Skalen.
+      - Keine Breakpoints: Layouts passen sich selbst an.
+
+      > Weniger Entscheidungen, die man falsch treffen kann.
+
+      ## Ein Beispiel
+
+      ```
+      grid min:18rem
+        card
+          title "Schnell"
+      ```
+
+      | Sprache | Tokens |
+      |---|---|
+      | HTML + CSS | 6.214 |
+      | nextcss | 944 |
+    alert "Dieser Artikel ist ein Beispiel für `prose`: alles darin ist Markdown." tone:primary
+
+SiteFooter

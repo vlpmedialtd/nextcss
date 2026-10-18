@@ -1,0 +1,62 @@
+{
+  "name": "nextcss",
+  "version": "0.1.0",
+  "description": "One language for structure and style. Compiles to minimal static HTML + CSS.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "nextcss": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./import": "./dist/import/html.js"
+  },
+  "files": [
+    "dist",
+    "spec",
+    "docs",
+    "llms.txt"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "nextcss": "node dist/cli.js",
+    "dev": "tsx src/cli.ts",
+    "test": "vitest run test/unit",
+    "test:visual": "vitest run test/visual",
+    "bench": "tsx bench/run.ts",
+    "docs": "tsx src/cli.ts docs > llms.txt",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "keywords": [
+    "html",
+    "css",
+    "language",
+    "compiler",
+    "layout",
+    "ai"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vlpmedialtd/nextcss.git"
+  },
+  "dependencies": {
+    "parse5": "^7.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/pngjs": "^6.0.5",
+    "js-tiktoken": "^1.0.21",
+    "pngjs": "^7.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
+  },
+  "optionalDependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.roundtrip.html
+test/visual/__out__/
+bench/__out__/
+examples/**/dist/
+.DS_Store
+.claude/

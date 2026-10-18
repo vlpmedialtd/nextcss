@@ -1,0 +1,99 @@
+page plain lang:en
+
+head
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Notes on Fast Websites</title>
+
+css
+  /* classic hand-written stylesheet */
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 17px/1.6 Georgia, serif; color: #222; background: #fdfdfb; }
+  a { color: #0b5cad; }
+  .site-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; border-bottom: 1px solid #ddd; background: url(bg.svg) repeat-x; }
+  .logo { font-weight: bold; text-decoration: none; color: #111; }
+  .menu { list-style: none; margin: 0; padding: 0; }
+  .menu li { display: inline-block; margin-left: 16px; }
+  .menu a { text-decoration: none; }
+  .menu a.active, .menu a:hover { border-bottom: 2px solid currentColor; }
+  .content { max-width: 680px; margin: 0 auto; padding: 24px; }
+  h1 { font-size: 2.2em; line-height: 1.2; margin: 0.5em 0 0.2em; }
+  h2 { margin-top: 1.6em; }
+  figure { margin: 24px 0; }
+  figure.wide img { width: 100%; height: auto; display: block; }
+  figcaption { font-size: 14px; color: #666; text-align: center; }
+  blockquote { margin: 24px 0; padding-left: 16px; border-left: 4px solid #ccc; font-style: italic; }
+  blockquote p::before { content: "“"; }
+  pre { background: #f3f3f0; padding: 12px; overflow-x: auto; }
+  code { font-family: Menlo, monospace; font-size: 0.9em; }
+  .data { border-collapse: collapse; width: 100%; }
+  .data th, .data td { padding: 6px 10px; border-bottom: 1px solid #ddd; text-align: left; }
+  .data tbody tr:nth-child(even) { background: #f6f6f3; }
+  .site-footer { text-align: center; padding: 24px; color: #777; font-size: 14px; }
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    .site-header { flex-direction: column; gap: 8px; }
+    .menu li { margin: 0 8px; }
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1b1b1a; color: #e6e6e3; }
+    a { color: #7fb6ff; }
+  }
+  @media print { .site-header, .site-footer { display: none; } }
+
+      .post-meta { color: #666; font-size: 14px; }
+      .post-meta a:hover { text-decoration: underline; }
+    
+
+body class:post
+  header class:site-header
+    link "Fast Notes" to:/ class:logo
+    el ul class:menu
+      item
+        link "Home" to:/
+      " "
+      item
+        link "Archive" to:/archive
+      " "
+      item
+        link "About" to:/about class:active
+  main class:content
+    card
+      title "Why your site is slow & what to do" level:1
+      text class:post-meta
+        "Posted on "
+        el time "March 1, 2026" datetime=2026-03-01
+        " by [Sam](/me)"
+      text "Most pages ship **far more CSS** than they use. The browser has to download, parse and match *every* rule, even the unused ones. Use `coverage` in DevTools to see it."
+      el figure class:wide
+        image src:hero.svg alt:"A chart of page weight over time" width=800 height=300
+        el figcaption "Median page weight, 2016–2026."
+      title "Three quick wins"
+      el ol
+        item "Remove unused CSS."
+        " "
+        item "Set `width` and `height` on images."
+        " "
+        item "Lazy-load everything below the fold."
+      el blockquote
+        text "Performance is a feature."
+      html
+        <pre><code>img { max-width: 100%;
+              height: auto; }</code></pre>
+      title "Numbers"
+      el table class:data
+        el thead
+          el tr
+            el th "Metric"
+            el th "Before"
+            el th "After"
+        el tbody
+          el tr
+            el td "LCP"
+            el td "3.1 s"
+            el td "1.2 s"
+          el tr
+            el td "CSS"
+            el td "212 KB"
+            el td "9 KB"
+      text "Questions? [Write me](mailto:sam@example.com) or read the [archive](/archive)."
+  footer class:site-footer
+    text "© 2026 Fast Notes · [RSS](/rss.xml)"

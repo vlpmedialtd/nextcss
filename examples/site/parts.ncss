@@ -1,0 +1,18 @@
+// Shared theme and components for every page of the site.
+theme brand:#7c3aed font:Inter fonts:https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap radius:l
+
+define SiteHeader()
+  header
+    link "**Nordlicht** Studio" plain to:index.html
+    nav
+      link "Start" to:index.html
+      link "Journal" to:post.html
+
+define SiteFooter()
+  footer
+    text "© 2026 Nordlicht Studio · Made with nextcss"
+
+define Teaser(title, text, to)
+  card to:"{$to}"
+    title "{$title}"
+    text "{$text}" muted
